@@ -9,8 +9,25 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Todo API")
+
+
+# 1. Allow your React app's URL
+origins = [
+    "http://localhost:3000",  # Default for Create React App
+    "http://localhost:5173",  # Default for Vite + React
+]
+
+# 2. Add the CORS middleware to your app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows GET, POST, PUT, DELETE
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Pydantic models for data validation
 class TodoItem(BaseModel):
@@ -85,3 +102,17 @@ def delete_todo(todo_id: int):
     del todo_db[todo_id]
     return None
 
+
+# from fastapi import FastAPI
+
+# app = FastAPI()
+
+
+# @app.get("/")
+# def read_root():
+#     return {"Hello": "World"}
+
+
+# @app.get("/items/{item_id}")
+# def read_item(item_id: int, q: str | None = None):
+#     return {"item_id": item_id, "q": q}
